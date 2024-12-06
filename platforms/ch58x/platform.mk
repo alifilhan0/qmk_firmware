@@ -18,19 +18,19 @@ COMPILEFLAGS += -fshort-enums
 COMPILEFLAGS += -mno-ms-bitfields
 
 CFLAGS += $(COMPILEFLAGS)
-CFLAGS += -fno-strict-aliasing
+CFLAGS += -fno-strict-aliasing -std=gnu99 -gdwarf-3
 
 CXXFLAGS += $(COMPILEFLAGS)
 CXXFLAGS += -fno-exceptions
 CXXFLAGS += $(CXXSTANDARD)
 
-LDFLAGS  += -Xlinker --gc-sections -Wl,-Map,keyboard.map -Wl,--print-memory-usage
-LDFLAGS  += --specs=nano.specs --specs=nosys.specs
-LDFLAGS  += -Wall -nostartfiles
-LDFLAGS	 += -TLink_APP.ld -lISP583 -lRV3UFI -lBLECH58x
+UNMAPPED_LDFLAGS  += -Xlinker --gc-sections -Wl,-Map,keyboard.map -Wl,--print-memory-usage
+UNMAPPED_LDFLAGS  += --specs=nano.specs --specs=nosys.specs -Og
+UNMAPPED_LDFLAGS  += -Wall -nostartfiles -gdwarf-3
+UNMAPPED_LDFLAGS	 += -lISP583 -lRV3UFI -lBLECH58x
 MCUFLAGS += -march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-limit=8 -mno-save-restore -fmessage-length=0 -fsigned-char
 
-ASFLAGS += $(CFLAGS) $(COMPILEFLAGS) $(MCUFLAGS)
+ASFLAGS += $(CFLAGS) $(COMPILEFLAGS) $(MCUFLAGS) -Og -Wa, --warn -gdwarf-3
 
 VENDOR_MK 		+= $(PLATFORM_COMMON_DIR)/vendor/vendor.mk
 BOOTLOADER_MK 	+= $(PLATFORM_COMMON_DIR)/bootloader/bootloader.mk
@@ -51,7 +51,7 @@ EXTRAINCDIRS += $(PLATFORM_COMMON_DIR)/vendor/HAL/include	\
 				$(PLATFORM_COMMON_DIR)/vendor/printf	\
 				$(PLATFORM_COMMON_DIR)/vendor/RVMVSIS	\
 				$(PLATFORM_COMMON_DIR)/vendor/StdPeriphDriver/inc	\
-				$(PLATFORM_COMMON_DIR)/vnedor/USB_LIB	\
+				$(PLATFORM_COMMON_DIR)/vendor/USB_LIB	\
 				$(PLATFORM_COMMON_DIR)/eeprom	\
 				$(PLATFORM_COMMON_DIR)/bootloader/IAP	\
 				$(TOP_DIR)/tmk_core/protocol/ch5xx	\
@@ -73,3 +73,8 @@ bin: $(BUILD_DIR)/$(TARGET).hex
 	$(COPY) $(BUILD_DIR)/$(TARGET).bin $(TARGET).bin
 
 	
+bootloader:
+	$(CC) $(BOOTLOADER_INCDIRS) $(BOOTLOADER_LDLFAGS) $(CFLAGS) $(MCUFLAGS) -c $(BOOTLOADER_SRC) -O $(BOOTLOADER_SRC).o
+	$(AS) $(BOOTLOADER_INCDIRS) $(BOOTLOADER_LDLFAGS) $(ASFLAGS) $(MCUFLAGS) -c $(BOOTLOADER_AS) -O $(BOOTLOADER_AS).o
+	$(LD) $(BOOTLOADER_INCDIRS) $(BOOTLOADER_LDLFAGS) $(MCUFLAGS)
+
