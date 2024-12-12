@@ -38,4 +38,4 @@ BOOTLOADER_LDFLAGS = -L$(PLATFORM_COMMON_DIR)/vendor/BLE_LIB	\
 				-L$(PLATFORM_COMMON_DIR)/vendor/MESH_LIB	\
 				-L$(PLATFORM_COMMON_DIR)/vendor/USB_LIB	\
 				-L$(PLATFORM_COMMON_DIR)/vendor/StdPeriphDriver
-				$(LDLAGS) -T
+				$(LDLAGS) -TLink_IAP.ld
