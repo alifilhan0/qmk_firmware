@@ -209,6 +209,10 @@ else
     OPT_DEFS += -DEEPROM_VENDOR
     ifeq ($(PLATFORM),AVR)
       # Automatically provided by avr-libc, nothing required
+	else ifeq ($(PLATFORM), CH58X)
+		OPT_DEFS += -DEEPROM_DRIVER -DEEPROM_WEAR_LEVELING
+		COMMON_VPATH += $(PLATFORM_PATH)/$(PLATFORM_KEY)/eeprom
+		SRC += eeprom_driver.c eeprom_ch58x_custom.c
     else ifeq ($(PLATFORM),CHIBIOS)
       ifneq ($(filter %_STM32F072xB %_STM32F042x6, $(MCU_SERIES)_$(MCU_LDSCRIPT)),)
         # STM32 Emulated EEPROM, backed by MCU flash (soon to be deprecated)
@@ -260,6 +264,10 @@ ifneq ($(strip $(WEAR_LEVELING_DRIVER)),none)
     COMMON_VPATH += $(DRIVER_PATH)/wear_leveling
     COMMON_VPATH += $(QUANTUM_DIR)/wear_leveling
     SRC += wear_leveling.c
+    ifeq ($(PLATFORM), CH58X)
+	  SRC += wear_leveling_ch58x.c
+	  POST_CONFIG_H += $(PLATFORM_PATH)/$(PLATFORM_KEY)/eeprom/wear_leveling_ch58x_config.h
+	endif
     ifeq ($(strip $(WEAR_LEVELING_DRIVER)), embedded_flash)
       OPT_DEFS += -DHAL_USE_EFL
       SRC += wear_leveling_efl.c

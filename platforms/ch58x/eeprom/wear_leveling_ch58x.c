@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wear_leveling.h"
 #include "wear_leveling_internal.h"
 #include "eeprom.h"
-
+#include "eeprom_partition_table.h"
 static bool backing_store_locked = false;
 static uint32_t irq_status = 0;
 

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "eeprom.h"
 #include "print.h"
 #include "eeprom_driver.h"
-
+#include "eeprom_partition_table.h"
 void eeprom_driver_init(void)
 {
     print("eeprom_driver_init\n");
