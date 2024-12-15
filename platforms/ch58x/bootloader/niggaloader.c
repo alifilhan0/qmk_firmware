@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "eeconfig.h"
 #include "platform_deps.h"
 #include "gpio.h"
+#include "eeprom_partition_table.h"
 
 bool bootmagic_allow_jump()
 {
